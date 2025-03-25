@@ -47,8 +47,8 @@ end
 % zennom is w.r.t. upward direction (0 degrees)
 zennom = [92.5, 100, 110, 120, 130, 140, 150, 160, 170, 180]; % rows 1-10
 azinom = [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180]; % cols 1-13
-nzen = size(zennom,2);
-nazi = size(azinom,2);
+n_zen = size(zennom,2);
+n_azi = size(azinom,2);
 
 % Generate solid angle in sr for each quad
 squad = sin(zennom'*pi/180).*ones(10,13)*(10*pi/180)*(15*pi/180); % General Quad solid angles
@@ -83,10 +83,10 @@ for iset = 1:nsets
     dsto(iset).bt = dsto(iset).bp + bw;
     
     % Allocate for output
-    dsto(iset).outcount = zeros(nzen,nazi,nwave);
-    dsto(iset).outrrs = zeros(nzen,nazi,nwave);
+    dsto(iset).outcount = zeros(n_zen,n_azi,nwave);
+    dsto(iset).outrrs = zeros(n_zen,n_azi,nwave);
     dsto(iset).outR = zeros(nwave,1);
-    dsto(iset).outscount = zeros(nzen,nazi,nwave); % number of scatters per exiting photon   
+    dsto(iset).outscount = zeros(n_zen,n_azi,nwave); % number of scatters per exiting photon   
     dsto(iset).tscount = zeros(nwave,1); % number of scatters per (all photons)
 end
 
@@ -133,18 +133,18 @@ parfor iset = 1:nsets
 	
 		if exp == 0
 			% Run MC0 - black sky, for reflectance only
-			 [dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep0(nph,nzen,nazi,zen,cdep,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad);
+			 [dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep0(nph,n_zen,n_azi,zen,cdep,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad);
 		elseif exp == 1
 			% Run MC1 - MS tracking, full sky, pre-determined downwelling photons
-			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave),dsto(iset).outscount(:,:,iwave),dsto(iset).tscount(iwave)] = fwd_mc_deep1(nzen,nazi,cdep,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad,drad_ang,drad_nph(:,iwave),pcount(iwave));
+			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave),dsto(iset).outscount(:,:,iwave),dsto(iset).tscount(iwave)] = fwd_mc_deep1(n_zen,n_azi,cdep,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad,drad_ang,drad_nph(:,iwave),pcount(iwave));
 			
 		elseif exp == 2
 			% Run MC2 - black tank, limited FOV uniform sky
-			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep2(nph,nzen,nazi,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad);
+			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep2(nph,n_zen,n_azi,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad);
 		   
 	   elseif exp == 3
 			% Run MC3 - black tank, pre-determined downwelling photons
-			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep3(nzen,nazi,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad,drad_ang,drad_nph(:,iwave),pcount(iwave));
+			[dsto(iset).outcount(:,:,iwave),dsto(iset).outR(iwave),dsto(iset).outrrs(:,:,iwave)] = fwd_mc_deep3(n_zen,n_azi,aw(iwave),bw(iwave),dsto(iset).ag(iwave),dsto(iset).bp(iwave),ffgam,ffcdf,squad,drad_ang,drad_nph(:,iwave),pcount(iwave));
 
     end
     toc

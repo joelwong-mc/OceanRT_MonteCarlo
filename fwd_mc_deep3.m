@@ -1,11 +1,11 @@
-function [outcount,outR,outrrs] = fwd_mc_deep3(nzen,nazi,aw,bw,ag,bp,ccgam,cccdf,squad,drad_ang,drad_nph,pcount)
+function [outcount,outR,outrrs] = fwd_mc_deep3(n_zen,n_azi,aw,bw,ag,bp,ccgam,cccdf,squad,drad_ang,drad_nph,pcount)
 % MC simulation for one IOP set, and one wavelength
 % Keep track of depth and angles, but not x-y position
 % Runs nph number of photons and outputs no of photons per quad exiting surface
 
 % Initiate outrad
-outrad = zeros(nzen,nazi);
-outcount = zeros(nzen,nazi);
+outrad = zeros(n_zen,n_azi);
+outcount = zeros(n_zen,n_azi);
 
 % Calculate IOPs
 at = aw + ag;
